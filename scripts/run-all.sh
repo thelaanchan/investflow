@@ -16,6 +16,14 @@ touch "$PID_FILE"
 export JAVA_HOME="/Library/Java/JavaVirtualMachines/jdk-21.jdk/Contents/Home"
 export PATH="$JAVA_HOME/bin:$PATH"
 
+# Load environment variables strictly from .env
+if [ -f "$BASE_DIR/.env" ]; then
+    echo "Loading environment variables from .env..."
+    set -a
+    source "$BASE_DIR/.env"
+    set +a
+fi
+
 echo "=================================================================="
 echo "          INVESTFLOW — LAUNCHING MICROSERVICES & APPS             "
 echo "=================================================================="

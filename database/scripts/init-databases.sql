@@ -6,7 +6,9 @@
 -- 1. Create Server Login for Application Services
 IF NOT EXISTS (SELECT name FROM sys.server_principals WHERE name = 'investflow_app')
 BEGIN
-    CREATE LOGIN [investflow_app] WITH PASSWORD = 'InvestFlowApp#2026!', CHECK_POLICY = OFF;
+    DECLARE @password NVARCHAR(128) = N'$(DB_PASSWORD)';
+    DECLARE @createLoginSql NVARCHAR(MAX) = N'CREATE LOGIN [investflow_app] WITH PASSWORD = ''' + REPLACE(@password, '''', '''''') + N''', CHECK_POLICY = OFF;';
+    EXEC sp_executesql @createLoginSql;
     PRINT 'Created server login: investflow_app';
 END
 GO

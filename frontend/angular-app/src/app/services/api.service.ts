@@ -14,8 +14,11 @@ export interface AuthResponse {
   accessToken: string;
   refreshToken: string;
   tokenType: string;
-  expiresIn: number;
-  user: User;
+  userId: number;
+  email: string;
+  firstName: string;
+  lastName: string;
+  roles: string[];
 }
 
 export interface ApiResponse<T> {
@@ -36,7 +39,7 @@ export class ApiService {
 
   constructor(private http: HttpClient) {
     const savedUser = localStorage.getItem('investflow_user');
-    if (savedUser) {
+    if (savedUser && savedUser !== 'undefined') {
       try {
         this.currentUserSubject.next(JSON.parse(savedUser));
       } catch (e) {
@@ -61,10 +64,17 @@ export class ApiService {
     return this.http.post<ApiResponse<AuthResponse>>(`${this.baseUrl}/auth/login`, credentials).pipe(
       tap(res => {
         if (res.data && res.data.accessToken) {
+          const user: User = {
+            id: res.data.userId,
+            email: res.data.email,
+            firstName: res.data.firstName,
+            lastName: res.data.lastName,
+            roles: res.data.roles
+          };
           localStorage.setItem('investflow_token', res.data.accessToken);
           localStorage.setItem('investflow_refresh', res.data.refreshToken);
-          localStorage.setItem('investflow_user', JSON.stringify(res.data.user));
-          this.currentUserSubject.next(res.data.user);
+          localStorage.setItem('investflow_user', JSON.stringify(user));
+          this.currentUserSubject.next(user);
         }
       })
     );
@@ -74,10 +84,17 @@ export class ApiService {
     return this.http.post<ApiResponse<AuthResponse>>(`${this.baseUrl}/auth/register`, data).pipe(
       tap(res => {
         if (res.data && res.data.accessToken) {
+          const user: User = {
+            id: res.data.userId,
+            email: res.data.email,
+            firstName: res.data.firstName,
+            lastName: res.data.lastName,
+            roles: res.data.roles
+          };
           localStorage.setItem('investflow_token', res.data.accessToken);
           localStorage.setItem('investflow_refresh', res.data.refreshToken);
-          localStorage.setItem('investflow_user', JSON.stringify(res.data.user));
-          this.currentUserSubject.next(res.data.user);
+          localStorage.setItem('investflow_user', JSON.stringify(user));
+          this.currentUserSubject.next(user);
         }
       })
     );

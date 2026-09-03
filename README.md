@@ -43,6 +43,35 @@
 
 ---
 
+## 📸 Platform User Interface & Live Screenshots
+
+### 1. Executive Investment Dashboard (`/dashboard`)
+> Real-time portfolio valuation with live Server-Sent Events (SSE) price ticks, KPI metrics, dynamic SVG performance vs S&P 500 benchmark, asset allocation breakdown, risk metrics (Alpha, Beta, Sharpe), and active holdings table.
+
+<p align="center">
+  <img src="docs/screenshots/01-executive-dashboard.png" alt="InvestFlow Executive Dashboard" width="100%">
+</p>
+
+---
+
+### 2. Multi-Portfolio Wealth Management (`/portfolios`)
+> Institutional multi-portfolio segregation (Growth, Retirement 401k, Dividend & Value, Next-Gen Tech) with capital allocation and return performance indicators.
+
+<p align="center">
+  <img src="docs/screenshots/02-portfolios-management.png" alt="InvestFlow Portfolio Management" width="100%">
+</p>
+
+---
+
+### 3. Multi-Asset Trading & Position Execution (`/investments`)
+> Real-time trade desk supporting BUY and SELL order execution with automatic proportional cost-basis reduction, live mark-to-market pricing, and asset class categorization (Equities, ETFs, Bonds).
+
+<p align="center">
+  <img src="docs/screenshots/03-trade-stocks-etfs.png" alt="InvestFlow Trade Stocks and ETFs" width="100%">
+</p>
+
+---
+
 ## 📦 Microservices Breakdown
 
 | Service | Technology Stack | Port | Responsibilities |
@@ -131,8 +160,9 @@ docker compose ps
 
 #### Step 2: Initialize Database Schemas (First Time Only)
 ```bash
+source .env
 docker compose exec -T sqlserver /opt/mssql-tools18/bin/sqlcmd \
-  -S localhost -U sa -P "InvestFlow@2026!Secure" -C \
+  -S localhost -U sa -P "$MSSQL_SA_PASSWORD" -v DB_PASSWORD="$DB_PASSWORD" -C \
   -i /init-scripts/init-databases.sql
 ```
 

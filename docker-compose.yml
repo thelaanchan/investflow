@@ -11,15 +11,15 @@ services:
       - "${MSSQL_PORT:-1433}:1433"
     environment:
       ACCEPT_EULA: "Y"
-      MSSQL_SA_PASSWORD: "${MSSQL_SA_PASSWORD:-InvestFlow@2026!Secure}"
+      MSSQL_SA_PASSWORD: "${MSSQL_SA_PASSWORD}"
       MSSQL_PID: "Developer"
     volumes:
       - mssql_data:/var/opt/mssql
       - ./database/scripts/init-databases.sql:/init-scripts/init-databases.sql:ro
     healthcheck:
       test: >
-        /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "$${MSSQL_SA_PASSWORD:-InvestFlow@2026!Secure}" -C -Q "SELECT 1" ||
-        /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "$${MSSQL_SA_PASSWORD:-InvestFlow@2026!Secure}" -Q "SELECT 1"
+        /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "$$MSSQL_SA_PASSWORD" -C -Q "SELECT 1" ||
+        /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "$$MSSQL_SA_PASSWORD" -Q "SELECT 1"
       interval: 10s
       timeout: 5s
       retries: 10
@@ -37,11 +37,11 @@ services:
     ports:
       - "${REDIS_PORT:-6379}:6379"
     command: >
-      sh -c "redis-server --requirepass \"$${REDIS_PASSWORD:-InvestFlowRedis@2026!}\""
+      sh -c "redis-server --requirepass \"$$REDIS_PASSWORD\""
     volumes:
       - redis_data:/data
     healthcheck:
-      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD:-InvestFlowRedis@2026!}", "ping"]
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "ping"]
       interval: 5s
       timeout: 3s
       retries: 5

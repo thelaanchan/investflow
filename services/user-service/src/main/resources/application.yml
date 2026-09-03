@@ -7,7 +7,7 @@ spring:
   datasource:
     url: jdbc:sqlserver://${DB_HOST:localhost}:${MSSQL_PORT:1433};databaseName=investflow_user;encrypt=true;trustServerCertificate=true
     username: ${DB_USER:investflow_app}
-    password: ${DB_PASSWORD:InvestFlowApp#2026!}
+    password: ${DB_PASSWORD}
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
     hikari:
       maximum-pool-size: 10
@@ -30,10 +30,10 @@ spring:
     redis:
       host: ${REDIS_HOST:localhost}
       port: ${REDIS_PORT:6379}
-      password: ${REDIS_PASSWORD:InvestFlowRedis@2026!}
+      password: ${REDIS_PASSWORD}
 
 jwt:
-  secret: ${JWT_SECRET:404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}
+  secret: ${JWT_SECRET}
   expiration-ms: ${JWT_EXPIRATION_MS:86400000}
   refresh-expiration-ms: ${JWT_REFRESH_EXPIRATION_MS:604800000}
 
