@@ -1,0 +1,61 @@
+services:
+  # ==============================================================================
+  # Primary Relational Database: Microsoft SQL Server 2022
+  # ==============================================================================
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    platform: linux/amd64
+    container_name: investflow-sqlserver
+    restart: unless-stopped
+    ports:
+      - "${MSSQL_PORT:-1433}:1433"
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "${MSSQL_SA_PASSWORD:-InvestFlow@2026!Secure}"
+      MSSQL_PID: "Developer"
+    volumes:
+      - mssql_data:/var/opt/mssql
+      - ./database/scripts/init-databases.sql:/init-scripts/init-databases.sql:ro
+    healthcheck:
+      test: >
+        /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "$${MSSQL_SA_PASSWORD:-InvestFlow@2026!Secure}" -C -Q "SELECT 1" ||
+        /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "$${MSSQL_SA_PASSWORD:-InvestFlow@2026!Secure}" -Q "SELECT 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+    networks:
+      - investflow-network
+
+  # ==============================================================================
+  # Distributed Cache & Rate Limiting: Redis 7
+  # ==============================================================================
+  redis:
+    image: redis:7-alpine
+    container_name: investflow-redis
+    restart: unless-stopped
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    command: >
+      sh -c "redis-server --requirepass \"$${REDIS_PASSWORD:-InvestFlowRedis@2026!}\""
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD:-InvestFlowRedis@2026!}", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
+    networks:
+      - investflow-network
+
+networks:
+  investflow-network:
+    name: investflow-network
+    driver: bridge
+
+volumes:
+  mssql_data:
+    name: investflow_mssql_data
+  redis_data:
+    name: investflow_redis_data

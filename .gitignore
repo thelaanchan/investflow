@@ -1,0 +1,61 @@
+# Target and build directories
+target/
+**/target/
+build/
+**/build/
+out/
+**/out/
+dist/
+**/dist/
+
+# Logs
+*.log
+**/logs/
+logs/
+
+# Sensitive files & environments
+.env
+!.env.example
+*.pem
+*.key
+*.p12
+
+# IDE files
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+.classpath
+.project
+.settings/
+
+# Node / Angular
+node_modules/
+**/node_modules/
+.angular/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv/
+
+# Docker volumes and temp
+mssql_data/
+redis_data/
+tmp/
+scratch/
