@@ -4,6 +4,11 @@ server:
 spring:
   application:
     name: ai-service
+  datasource:
+    url: jdbc:sqlserver://${DB_HOST:localhost}:${MSSQL_PORT:1433};databaseName=investflow_investment;encrypt=true;trustServerCertificate=true
+    username: ${DB_USER:investflow_app}
+    password: ${DB_PASSWORD:InvestFlowApp#2026!}
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
   data:
     redis:
       host: ${REDIS_HOST:localhost}
